@@ -24,8 +24,9 @@ class ComputerVision:
         
         results = self.model.predict(source=self.get_image_from_url(url), conf=0.25, save=False, stream=False) # adjut conf value
 
+        annotated_image = results[0].plot()
+
         if showimage == True:
-            annotated_image = results[0].plot()
             cv2.imshow("Detection Image", annotated_image)
             cv2.waitKey(0) # wait until key press to close iagmae
             cv2.destroyAllWindows()
@@ -47,7 +48,7 @@ class ComputerVision:
             #print(f"Detected: {results[0].names[class_id]}, BBox: ({x1}, {y1}, {x2}, {y2})")
             object_arr.append(results[0].names[class_id])
 
-        return object_arr
+        return object_arr, annotated_image
 
 if __name__ == "__main__":
     print("This class is meant to be imported.")

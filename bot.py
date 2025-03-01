@@ -5,6 +5,9 @@ import discord
 import os
 from dotenv import load_dotenv
 from main import ComputerVision
+import numpy as np
+import cv2
+import io
 
 # create image detection object instance
 detector = ComputerVision()
@@ -20,7 +23,7 @@ class ListenerBot(discord.Client):
 
     async def on_ready(self):
         general_channel_id = self.get_channel(1345218942028873840)
-        await general_channel_id.send(f"Waiting for image.", tts=True)
+        await general_channel_id.send(f"Waiting for image. Type 'HELP' for help.", tts=True)
 
     async def on_message(self, message):
 
@@ -32,7 +35,25 @@ class ListenerBot(discord.Client):
         
         if message.attachments != []:
             url = message.attachments[0].url
-            await message.reply(content=detector.get_objects(url, showimage=False), tts=True) # await basically allows other functions to run at the same time
+            objects, annotated_image_np_arr = detector.get_objects(url, showimage=False)
+
+            img_encode = cv2.imencode(".jpg", annotated_image_np_arr)[1] #convert the np array to a jpg
+            image_bytes = io.BytesIO(img_encode) # bytesio object to store in memory 
+            image_bytes.seek(0) # make sure we start from the start of the stream
+
+            await message.reply(content=objects, tts=True) # await basically allows other functions to run at the same time
+            await message.add_reaction('👍') #idk if this will work
+            img_file = await message.reply(file=discord.File(image_bytes, filename=str(message.author))) #discord.File opens the fiel in 'rb' mode to read the bytes
+
+            img_file_url = img_file.attachments[0].url #img_file is a message object
+
+            embed = discord.Embed(
+                color=discord.Colour.fuchsia() # change this into a high contrast neon colour so client can easily see wher embed is
+            )
+
+            embed.set_image(url=img_file_url)
+            await message.channel.send(embed=embed)
+
             await message.channel.send("Waiting for image.", tts=True)
                                                                                            
 bot = ListenerBot()
