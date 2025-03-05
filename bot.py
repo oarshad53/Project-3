@@ -41,13 +41,19 @@ class ListenerBot(discord.Client):
             image_bytes = io.BytesIO(img_encode) # bytesio object to store in memory 
             image_bytes.seek(0) # make sure we start from the start of the stream
 
-            await message.reply(content=objects, tts=True) # await basically allows other functions to run at the same time
-            await message.add_reaction('👍') #idk if this will work
+            if len(objects) == 1:
+                await message.reply(content="There is a " + objects[0] + "in front of you.", tts=True) # await basically allows other functions to run at the same time, this speaks out objects in photo
+
+            else:
+                await message.reply(content=objects, tts=True)
+
+            # let's adjust these messages to make sure they work^^^ also need to format objects correctly.
+            await message.add_reaction('👍')
             img_file = await message.reply(file=discord.File(image_bytes, filename=str(message.author))) #discord.File opens the fiel in 'rb' mode to read the bytes
 
             img_file_url = img_file.attachments[0].url #img_file is a message object
 
-            embed = discord.Embed(
+            embed = discord.Embed( #embed tuple
                 color=discord.Colour.fuchsia() # change this into a high contrast neon colour so client can easily see wher embed is
             )
 

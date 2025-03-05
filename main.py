@@ -36,14 +36,7 @@ class ComputerVision:
         for box in results[0].boxes:
             x1, y1, x2, y2 = map(int, box.xyxy[0]) # mapping x1,y1 x2,y2 coord pairs of box for each object
             class_id = int(box.cls[0]) # get the class_id so we can say what the object is from an already defined list of detectable objects
-            confidence = box.conf[0].item() # confidence score of each box. .item() is used to PyTorch tensor value to a normal int
-
-        # now we make a dictionary to readily have key data points available to us
-            detection = {
-                "class": results[0].names[class_id],
-                "bbox": (x1, x2, y1, y2),  # tuple
-                "confidence": confidence
-            }
+            confidence = box.conf[0].item() # confidence score of each box. .item() is used to convert the PyTorch tensor value to a normal int
 
             #print(f"Detected: {results[0].names[class_id]}, BBox: ({x1}, {y1}, {x2}, {y2})")
             object_arr.append(results[0].names[class_id])
