@@ -1,8 +1,0 @@
-import streamlit as st
-from PIL import Image
-
-
-st.title("1P13 Project 3 Image Detection")
-
-st.header("How it works:")
-st.write("Enter a photo below, and image detection will be run on it")
