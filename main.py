@@ -19,7 +19,19 @@ class ComputerVision:
         except Exception as e:
             print(e.args[0])
             return None # should stop execution if we get an exception?
+        
+    def get_objects_jpeg(self, image):
+        
+        results = self.model.predict(source=image, conf=0.25, save=False, stream=False)
 
+        object_arr = []
+
+        for item in results[0].boxes:
+            class_id = int(item.cls[0])
+            object_arr.append(results[0].names[class_id])
+
+        return object_arr
+        
     def get_objects(self, url, showimage=True) -> list:  #should return a list
         
         results = self.model.predict(source=self.get_image_from_url(url), conf=0.25, save=False, stream=False) # adjut conf value
