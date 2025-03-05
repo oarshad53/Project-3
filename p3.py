@@ -1,3 +1,5 @@
+#This just takes an image and spits it back out, still needs to run detection
+
 import streamlit as st
 from PIL import Image
 
