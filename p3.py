@@ -2,6 +2,7 @@
 
 import streamlit as st
 from PIL import Image
+from main import ComputerVision
 
 st.title("Object Detection For 1P13")
 
