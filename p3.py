@@ -16,7 +16,11 @@ file = st.file_uploader("Enter a photo here", type = ["jpg", "png", "jpeg"]) #St
 
 #processing photo
 if file is not None:
-    with open(file) as image:
-        processed_img = model.get_objects_jpeg(image)
-        jpeg = processed_img.tobytes()
-        st.image(jpeg)
+    #creating image object
+    image = Image.open(file)
+    processed_image = model.get_objects_url(image) #needed as BYTEIO, not as an image
+    image_byte_array = io.BYTESIO() #created empty array of bytes
+    image_byte_array = image_byte_array.getvalue()
+    st.image(image_byte_array)
+    
+    
