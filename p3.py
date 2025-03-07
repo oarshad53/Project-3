@@ -19,7 +19,9 @@ file = st.file_uploader("Enter a photo here", type = ["jpg", "png", "jpeg"]) #St
 
 #processing photo
 if file is not None:
-    st.image(file)
+    image = Image.open(file) #creates image object
+    processed_image = model.get_objects_jpeg(image)
+    #NOT COMPLETE
 
     
     
