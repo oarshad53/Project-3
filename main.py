@@ -25,12 +25,21 @@ class ComputerVision:
         results = self.model.predict(source=image, conf=0.25, save=False, stream=False)
 
         object_arr = []
+        annotated_image = results[0].plot()
 
         for item in results[0].boxes:
             class_id = int(item.cls[0])
             object_arr.append(results[0].names[class_id])
+    
+        for box in results[0].boxes:
+                x1, y1, x2, y2 = map(int, box.xyxy[0]) # mapping x1,y1 x2,y2 coord pairs of box for each object
+                class_id = int(box.cls[0]) # get the class_id so we can say what the object is from an already defined list of detectable objects
+                confidence = box.conf[0].item() # confidence score of each box. .item() is used to convert the PyTorch tensor value to a normal int
 
-        return object_arr
+                #print(f"Detected: {results[0].names[class_id]}, BBox: ({x1}, {y1}, {x2}, {y2})")
+                object_arr.append(results[0].names[class_id])
+
+        return object_arr, annotated_image
         
     def get_objects(self, url, showimage=True) -> list:  #should return a list
         
