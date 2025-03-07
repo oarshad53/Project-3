@@ -3,6 +3,8 @@ import streamlit as st
 from main import ComputerVision
 from PIL import Image
 
+model = ComputerVision()
+
 #setting up title and instructions
 st.title("Object Detection For 1P13")
 st.header("How it works:")
@@ -17,5 +19,6 @@ detector = ComputerVision()
 
 if image is not None:
     image_object = Image(file)
+    processed_image = model.get_objects_jpeg(image_object)
     processed_image = detector.get_objects_jpeg(image_object)
     st.image(processed_image)
