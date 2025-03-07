@@ -13,4 +13,4 @@ image = st.file_uploader("Enter a photo here", type = ["jpg", "png", "jpeg"])
 #processing photo
 if file is not None:
     processed_image = get_objects_jpeg(image)
-    st.image(process_image)
+    st.image(processed_image)
