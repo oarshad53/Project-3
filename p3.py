@@ -15,10 +15,7 @@ file = st.file_uploader("Enter a photo here", type = ["jpg", "png", "jpeg"])
 
 #processing photo
 
-detector = ComputerVision()
-
-if image is not None:
+if file is not None:
     image_object = Image(file)
     processed_image = model.get_objects_jpeg(image_object)
-    processed_image = detector.get_objects_jpeg(image_object)
     st.image(processed_image)
