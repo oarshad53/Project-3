@@ -2,6 +2,7 @@
 import streamlit as st
 from main import ComputerVision
 from PIL import Image
+import io
 
 model = ComputerVision()
 
@@ -17,4 +18,5 @@ file = st.file_uploader("Enter a photo here", type = ["jpg", "png", "jpeg"]) #St
 if file is not None:
     image = Image.open(file)
     processed_img = model.get_objects_jpeg(image)
+    io.BytesIO(processed_img)
     st.image(processed_img)
