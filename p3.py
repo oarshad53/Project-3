@@ -11,11 +11,10 @@ st.header("How it works:")
 st.write("Simply enter a photo, and we will identify the objects for you")
 
 #taking image from client's phone as input
-file = st.file_uploader("Enter a photo here", type = ["jpg", "png", "jpeg"])
+file = st.file_uploader("Enter a photo here", type = ["jpg", "png", "jpeg"]) #Stored as BYTEIO, need it as an image
 
 #processing photo
-
 if file is not None:
-    image_object = Image(file)
-    processed_image = model.get_objects_jpeg(image_object)
-    st.image(processed_image)
+    image = Image.open(file)
+    processed_img = model.get_objects_jpeg(image)
+    st.image(processed_img)
