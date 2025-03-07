@@ -11,6 +11,9 @@ st.write("Simply enter a photo, and we will identify the objects for you")
 image = st.file_uploader("Enter a photo here", type = ["jpg", "png", "jpeg"])
 
 #processing photo
-if file is not None:
-    processed_image = get_objects_jpeg(image)
+
+detector = ComputerVision()
+
+if image is not None:
+    processed_image = detector.get_objects_jpeg(image)
     st.image(processed_image)
