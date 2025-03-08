@@ -1,4 +1,4 @@
-#next step, make it work with ComputerVision function, spit processed image back at user
+#next step, testing
 
 
 #importing modules
@@ -20,8 +20,10 @@ file = st.file_uploader("Enter a photo here", type = ["jpg", "png", "jpeg"]) #St
 #processing photo
 if file is not None:
     image = Image.open(file) #creates image object
-    processed_image = model.get_objects_jpeg(image)
-    #NOT COMPLETE
+    _, processed_image = model.get_objects_jpeg(image)#this is stored as an image, need it as bytes
+    processed_image_bytes = io.BytesIO(processed_image) #Converted back to bytes, which can now be displayed
+    st.image(processed_image_bytes) 
+    
 
     
     
