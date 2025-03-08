@@ -9,10 +9,12 @@ import io
 
 model = ComputerVision()
 
-#setting up title and instructions
-st.title("Object Detection For 1P13")
-st.header("How it works:")
-st.write("Simply enter a photo, and we will identify the objects for you")
+#Color is set to neon green, which the client is able to see
+#setting up title and instructions, embedding html to meet client's vison needs
+st.write("<h1 style ='color: #39FF14;'>Object Detection For 1P13</h1>", unsafe_allow_html = True)
+st.write("<h2 style ='color: #39FF14;'>How it works:</h2>", unsafe_allow_html = True)
+st.write("<h4 style = 'color: #39FF14;'>Simply enter a photo, and we will identify it for you</h4>", unsafe_allow_html = True)
+
 
 #taking image from client's phone as input
 file = st.file_uploader("Enter a photo here", type = ["jpg", "png", "jpeg"]) #Stored as BYTEIO, need it as an image
