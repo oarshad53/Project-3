@@ -23,7 +23,7 @@ class ListenerBot(discord.Client):
 
     async def on_ready(self):
         general_channel_id = self.get_channel(1345218942028873840)
-        await general_channel_id.send(f"Waiting for image. Type 'HELP' for help.", tts=True)
+        await general_channel_id.send(f"Waiting for image. Type 'HELP' for help. For ideal results, please take an image of only a few objects.", tts=True)
 
     async def on_message(self, message):
 
@@ -31,7 +31,7 @@ class ListenerBot(discord.Client):
             return
 
         if message.content.lower() == "help":
-            await message.reply(content="To take an image, press the 'plus' icon on the bottom left of the screen, the press the camera icon.", tts=True)
+            await message.reply(content="To take an image, press the 'plus' icon on the bottom left of the screen, then press the camera icon. For the best results, take an image of only a few objects.", tts=True)
         
         if message.attachments != []:
             url = message.attachments[0].url
