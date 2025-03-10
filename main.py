@@ -36,7 +36,6 @@ class ComputerVision:
                 class_id = int(box.cls[0]) # get the class_id so we can say what the object is from an already defined list of detectable objects
                 confidence = box.conf[0].item() # confidence score of each box. .item() is used to convert the PyTorch tensor value to a normal int
 
-                #print(f"Detected: {results[0].names[class_id]}, BBox: ({x1}, {y1}, {x2}, {y2})")
                 object_arr.append(results[0].names[class_id])
 
         return object_arr, annotated_image
