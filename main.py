@@ -2,6 +2,7 @@ from ultralytics import YOLO
 import requests
 import cv2
 import numpy as np
+import easyocr
 
 class ComputerVision:
 
@@ -20,27 +21,18 @@ class ComputerVision:
             print(e.args[0])
             return None # should stop execution if we get an exception?
         
-    def get_objects_jpeg(self, image):
+    def get_text(self, url, showimage=False): # idk if this works yet
+
+        reader = easyocr.Reader(["en"])
+
+        try:
+            result = reader.readtext(url)
         
-        results = self.model.predict(source=image, conf=0.25, save=False, stream=False)
+        except Exception as e:
+            print(e.args[0])
+            return None # again shold stop executino ?
 
-        object_arr = []
-        annotated_image = results[0].plot()
-
-        for item in results[0].boxes:
-            class_id = int(item.cls[0])
-            object_arr.append(results[0].names[class_id])
-    
-        for box in results[0].boxes:
-                x1, y1, x2, y2 = map(int, box.xyxy[0]) # mapping x1,y1 x2,y2 coord pairs of box for each object
-                class_id = int(box.cls[0]) # get the class_id so we can say what the object is from an already defined list of detectable objects
-                confidence = box.conf[0].item() # confidence score of each box. .item() is used to convert the PyTorch tensor value to a normal int
-
-                object_arr.append(results[0].names[class_id])
-
-        return object_arr, annotated_image
-    
-    def get_objects(self, url, showimage=True) -> list:  #should return a list
+    def get_objects(self, url, showimage=False) -> list:  #should return a list
         
         results = self.model.predict(source=self.get_image_from_url(url), conf=0.25, save=False, stream=False) # adjut conf value
 
