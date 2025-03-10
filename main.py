@@ -40,7 +40,7 @@ class ComputerVision:
                 object_arr.append(results[0].names[class_id])
 
         return object_arr, annotated_image
-        
+    
     def get_objects(self, url, showimage=True) -> list:  #should return a list
         
         results = self.model.predict(source=self.get_image_from_url(url), conf=0.25, save=False, stream=False) # adjut conf value

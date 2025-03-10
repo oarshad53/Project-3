@@ -42,7 +42,7 @@ class ListenerBot(discord.Client):
             image_bytes.seek(0) # make sure we start from the start of the stream
 
             if len(objects) == 1:
-                await message.reply(content="There is a " + objects[0] + "in front of you.", tts=True) # await basically allows other functions to run at the same time, this speaks out objects in photo
+                await message.reply(content="There is a " + objects[0] + " in front of you.", tts=True) # await basically allows other functions to run at the same time, this speaks out objects in photo
 
             else:
                 await message.reply(content=objects, tts=True)
