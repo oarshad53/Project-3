@@ -2,7 +2,7 @@ from ultralytics import YOLO
 import requests
 import cv2
 import numpy as np
-import easyocr
+from paddleocr import PaddleOCR
 
 class ComputerVision:
 
@@ -10,6 +10,7 @@ class ComputerVision:
         self.model = YOLO(model) # yolo model, defaults to yolo11n.pt, which is the one being used in this project
 
     def get_image_from_url(self, url):
+
         try:
             response = requests.get(url)
             image_array = np.asarray(bytearray(response.content), dtype=np.uint8) # numpy image byte array
@@ -19,18 +20,23 @@ class ComputerVision:
 
         except Exception as e:
             print(e.args[0])
-            return None # should stop execution if we get an exception?
+            return None 
         
-    def get_text(self, url, showimage=False): # idk if this works yet
+    def get_text(self, url): # i guess multithreading is possible with paddle apparently but its honestly complicated
 
-        reader = easyocr.Reader(["en"])
+        ocr = PaddleOCR(use_angle_cls=True, lang="en") 
 
-        try:
-            result = reader.readtext(url)
-        
-        except Exception as e:
-            print(e.args[0])
-            return None # again shold stop executino ?
+        image = self.get_image_from_url(url)  
+
+        result = ocr.ocr(image, cls=True) #make the opencv image into one that the paddle can handle
+
+        text_clean = [] # clean up the reuslt
+        for line in result:
+            for word in line:
+                text_clean.append(word[1][0])  # Get the recognized text part
+
+        return " ".join(text_clean) if text_clean else "No recognised text."
+            
 
     def get_objects(self, url, showimage=False) -> list:  #should return a list
         
