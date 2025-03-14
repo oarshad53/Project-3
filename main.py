@@ -62,5 +62,4 @@ class ComputerVision:
         return object_arr, annotated_image
 
 if __name__ == "__main__":
-    #print("This class is meant to be imported.")
-
+    print("This class is meant to be imported.")
