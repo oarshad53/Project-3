@@ -28,12 +28,12 @@ class ComputerVision:
 
         image = self.get_image_from_url(url)  
 
-        result = ocr.ocr(image, cls=True) #make the opencv image into one that the paddle can handle
+        result = ocr.ocr(image, cls=True) #make the opencv image into one that paddle can handle
 
         text_clean = [] # clean up the reuslt
         for line in result:
             for word in line:
-                text_clean.append(word[1][0])  # Get the recognized text part
+                text_clean.append(word[1][0])  
 
         return " ".join(text_clean) if text_clean else "No recognised text."
             
@@ -62,5 +62,5 @@ class ComputerVision:
         return object_arr, annotated_image
 
 if __name__ == "__main__":
-    print("This class is meant to be imported.")
+    #print("This class is meant to be imported.")
 
