@@ -29,18 +29,19 @@ class ComputerVision:
         image = self.get_image_from_url(url)  
 
         result = ocr.ocr(image, cls=True) #make the opencv image into one that paddle can handle
-
+        
         text_clean = [] # clean up the reuslt
-        for line in result:
-            for word in line:
-                text_clean.append(word[1][0])  
+        if result != [None]:
+            for line in result:
+                for word in line:
+                    text_clean.append(word[1][0])  
 
         return " ".join(text_clean) if text_clean else "No recognised text."
             
 
     def get_objects(self, url, showimage=False) -> list:  #should return a list
         
-        results = self.model.predict(source=self.get_image_from_url(url), conf=0.25, save=False, stream=False) # adjut conf value
+        results = self.model.predict(source=self.get_image_from_url(url), conf=0.60, save=False, stream=False) # adjut conf value
 
         annotated_image = results[0].plot()
 
@@ -56,7 +57,6 @@ class ComputerVision:
             class_id = int(box.cls[0]) # get the class_id so we can say what the object is from an already defined list of detectable objects
             confidence = box.conf[0].item() # confidence score of each box. .item() is used to convert the PyTorch tensor value to a normal int
 
-            #print(f"Detected: {results[0].names[class_id]}, BBox: ({x1}, {y1}, {x2}, {y2})")
             object_arr.append(results[0].names[class_id])
 
         return object_arr, annotated_image
