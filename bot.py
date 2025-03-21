@@ -47,10 +47,13 @@ class ListenerBot(discord.Client):
                 image_bytes.seek(0) # make sure we start from the start of the stream
 
                 if len(objects) == 1:
-                    await message.reply(content="# There is a " + objects[0] + " in front of you.", tts=True) # await basically allows other functions to run at the same time, this speaks out objects in photo
+                    if objects[0].lower()[0] not in ["a","e","i","o","u"]:
+                        await message.reply(content="# There is a " + objects[0] + " in front of you.", tts=True) # await basically allows other functions to run at the same time, this speaks out objects in photo
+                    else:   
+                        await message.reply(content="# There is an " + objects[0] + " in front of you.", tts=True)
 
-                elif objects != []:
-                    await message.reply(content=objects, tts=True)
+                else:
+                    await message.reply(content="# These are the objects in front of you: " + ", ".join(objects), tts=True)
 
             # let's adjust these messages to make sure they work^^^ also need to format objects correctly.
                 await message.add_reaction('👍')
