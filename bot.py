@@ -1,5 +1,3 @@
-# next steps: format return arr in get_objects properly, consider using specific coordinate positions
-
 # import required libaries
 import discord
 import os
@@ -18,15 +16,17 @@ BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 class ListenerBot(discord.Client):
     
     def __init__(self):
+        self.tts_channel_id = 1354208945128079551
         intents = discord.Intents.all()
         super().__init__(intents=intents) # make sure we inherit the init of discord.Client as well as its methods
 
     async def on_ready(self):
         object_detection_channel_id = self.get_channel(1345218942028873840)
         await object_detection_channel_id.send(f"# Waiting for image. Type 'HELP' for help.", tts=True)
+        await self.get_channel(self.tts_channel_id).send(content="Waiting for image. Type 'HELP' for help.")
 
         text_recognition_channel_id = self.get_channel(1351256813814677654)
-        await text_recognition_channel_id.send(f"# Waiting for image. Type 'HELP' for help.")
+        await text_recognition_channel_id.send(f"# Waiting for image. Type 'HELP' for help.", tts=True)
 
     async def on_message(self, message):
 
@@ -49,11 +49,23 @@ class ListenerBot(discord.Client):
                 if len(objects) == 1:
                     if objects[0].lower()[0] not in ["a","e","i","o","u"]:
                         await message.reply(content="# There is a " + objects[0] + " in front of you.", tts=True) # await basically allows other functions to run at the same time, this speaks out objects in photo
+                        await self.get_channel(self.tts_channel_id).send(content="There is a " + objects[0] + " in front of you.")
                     else:   
                         await message.reply(content="# There is an " + objects[0] + " in front of you.", tts=True)
+                        await self.get_channel(self.tts_channel_id).send(content="There is an " + objects[0] + " in front of you.")
+
+                elif len(objects) != 0:
+                    if "person" in objects:
+                        objects.remove("person")
+                        if len(objects) == 1:
+                            await message.reply(content="# There is a " + objects[0] + " in front of you.", tts=True)
+                            await self.get_channel(self.tts_channel_id).send(content="There is a " + objects[0] + " in front of you.")
+                        else:
+                            await message.reply(content="# These are the objects in front of you: " + ", ".join(objects), tts=True)
+                            await self.get_channel(self.tts_channel_id).send(content="These are the objects in front of you: " + ", ".join(objects))
 
                 else:
-                    await message.reply(content="# These are the objects in front of you: " + ", ".join(objects), tts=True)
+                    await message.reply(content="# No objects detected.", tts=True)
 
             # let's adjust these messages to make sure they work^^^ also need to format objects correctly.
                 await message.add_reaction('👍')
@@ -70,6 +82,7 @@ class ListenerBot(discord.Client):
                     await message.channel.send(embed=embed)
 
                 await message.channel.send("# Waiting for image.", tts=True)
+                await self.get_channel(self.tts_channel_id).send(content="waiting for image")
 
         if message.channel.id == 1351256813814677654:
 
@@ -78,6 +91,7 @@ class ListenerBot(discord.Client):
                 
                 if detector.get_text(url) != "No recognised text.":
                     await message.reply(f"# {detector.get_text(url)}", tts=True)
+                    await self.get_channel(self.tts_channel_id).send(content="no recognised text")
                                                                                            
 bot = ListenerBot()
 bot.run(BOT_TOKEN)
