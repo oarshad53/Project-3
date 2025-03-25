@@ -91,7 +91,7 @@ class ListenerBot(discord.Client):
                 
                 if detector.get_text(url) != "No recognised text.":
                     await message.reply(f"# {detector.get_text(url)}", tts=True)
-                    await self.get_channel(self.tts_channel_id).send(content="no recognised text")
+                    await self.get_channel(self.tts_channel_id).send(f"{detector.get_text(url)}")
                                                                                            
 bot = ListenerBot()
 bot.run(BOT_TOKEN)
