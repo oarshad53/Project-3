@@ -20,6 +20,12 @@ class ListenerBot(discord.Client):
         intents = discord.Intents.all()
         super().__init__(intents=intents) # make sure we inherit the init of discord.Client as well as its methods
 
+    def starts_vowel(self, word):
+        if word[0] in ["a", "e", "i", "o", "u"]:
+            return True
+        else:
+            return False
+
     async def on_ready(self):
         object_detection_channel_id = self.get_channel(1345218942028873840)
         await object_detection_channel_id.send(f"# Waiting for image. Type 'HELP' for help.", tts=True)
@@ -47,7 +53,7 @@ class ListenerBot(discord.Client):
                 image_bytes.seek(0) # make sure we start from the start of the stream
 
                 if len(objects) == 1:
-                    if objects[0].lower()[0] not in ["a","e","i","o","u"]:
+                    if self.starts_vowel(objects[0].lower()) == False:
                         await message.reply(content="# There is a " + objects[0] + " in front of you.", tts=True) # await basically allows other functions to run at the same time, this speaks out objects in photo
                         await self.get_channel(self.tts_channel_id).send(content="There is a " + objects[0] + " in front of you.")
                     else:   
@@ -58,8 +64,12 @@ class ListenerBot(discord.Client):
                     if "person" in objects:
                         objects.remove("person")
                         if len(objects) == 1:
-                            await message.reply(content="# There is a " + objects[0] + " in front of you.", tts=True)
-                            await self.get_channel(self.tts_channel_id).send(content="There is a " + objects[0] + " in front of you.")
+                            if self.starts_vowel(objects[0].lower()) == False:
+                                await message.reply(content="# There is a " + objects[0] + " in front of you.", tts=True)
+                                await self.get_channel(self.tts_channel_id).send(content="There is a " + objects[0] + " in front of you.")
+                            else:
+                                await message.reply(content="# There is an " + objects[0] + " in front of you.", tts=True)
+                                await self.get_channel(self.tts_channel_id).send(content="There is an " + objects[0] + " in front of you.")
                         else:
                             await message.reply(content="# These are the objects in front of you: " + ", ".join(objects), tts=True)
                             await self.get_channel(self.tts_channel_id).send(content="These are the objects in front of you: " + ", ".join(objects))

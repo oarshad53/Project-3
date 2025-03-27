@@ -50,7 +50,7 @@ class ComputerVision:
             cv2.waitKey(0) # wait until key press to close iagmae
             cv2.destroyAllWindows()
 
-        object_arr = [] #make an array to contain detected objects for testing purposes
+        object_arr = []
 
         for box in results[0].boxes:
             x1, y1, x2, y2 = map(int, box.xyxy[0]) # mapping x1,y1 x2,y2 coord pairs of box for each object
