@@ -22,15 +22,15 @@ class ComputerVision:
             print(e.args[0])
             return None 
         
-    def get_text(self, url): # i guess multithreading is possible with paddle apparently but its honestly complicated
+    def get_text(self, url): 
 
         ocr = PaddleOCR(use_angle_cls=True, lang="en") 
 
         image = self.get_image_from_url(url)  
 
-        result = ocr.ocr(image, cls=True) #make the opencv image into one that paddle can handle
+        result = ocr.ocr(image, cls=True)
         
-        text_clean = [] # clean up the reuslt
+        text_clean = [] 
         if result != [None]:
             for line in result:
                 for word in line:
@@ -39,23 +39,23 @@ class ComputerVision:
         return " ".join(text_clean) if text_clean else "No recognised text."
             
 
-    def get_objects(self, url, showimage=False) -> list:  #should return a list
+    def get_objects(self, url, showimage=False) -> list:
         
-        results = self.model.predict(source=self.get_image_from_url(url), conf=0.60, save=False, stream=False) # adjut conf value
+        results = self.model.predict(source=self.get_image_from_url(url), conf=0.60, save=False, stream=False)
 
         annotated_image = results[0].plot()
 
         if showimage == True:
             cv2.imshow("Detection Image", annotated_image)
-            cv2.waitKey(0) # wait until key press to close iagmae
+            cv2.waitKey(0) # key press to close image
             cv2.destroyAllWindows()
 
         object_arr = []
 
         for box in results[0].boxes:
-            x1, y1, x2, y2 = map(int, box.xyxy[0]) # mapping x1,y1 x2,y2 coord pairs of box for each object
-            class_id = int(box.cls[0]) # get the class_id so we can say what the object is from an already defined list of detectable objects
-            confidence = box.conf[0].item() # confidence score of each box. .item() is used to convert the PyTorch tensor value to a normal int
+            x1, y1, x2, y2 = map(int, box.xyxy[0]) 
+            class_id = int(box.cls[0]) 
+            confidence = box.conf[0].item() 
 
             object_arr.append(results[0].names[class_id])
 

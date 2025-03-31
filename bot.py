@@ -27,6 +27,7 @@ class ListenerBot(discord.Client):
             return False
 
     async def on_ready(self):
+        
         object_detection_channel_id = self.get_channel(1345218942028873840)
         await object_detection_channel_id.send(f"# Waiting for image. Type 'HELP' for help.", tts=True)
         await self.get_channel(self.tts_channel_id).send(content="Waiting for image. Type 'HELP' for help.")
@@ -36,7 +37,7 @@ class ListenerBot(discord.Client):
 
     async def on_message(self, message):
 
-        if message.author == self.user: # do not do anything with bot's own messages
+        if message.author == self.user: 
             return
 
         if message.content.lower() == "help":
@@ -48,9 +49,9 @@ class ListenerBot(discord.Client):
                 url = message.attachments[0].url
                 objects, annotated_image_np_arr = detector.get_objects(url, showimage=False)
 
-                img_encode = cv2.imencode(".jpg", annotated_image_np_arr)[1] #convert the np array to a jpg
-                image_bytes = io.BytesIO(img_encode) # bytesio object to store in memory 
-                image_bytes.seek(0) # make sure we start from the start of the stream
+                img_encode = cv2.imencode(".jpg", annotated_image_np_arr)[1] # convert the np array to a jpg
+                image_bytes = io.BytesIO(img_encode) 
+                image_bytes.seek(0) # start from beginning of stream
 
                 if len(objects) == 1:
                     if self.starts_vowel(objects[0].lower()) == False:
@@ -77,15 +78,14 @@ class ListenerBot(discord.Client):
                 else:
                     await message.reply(content="# No objects detected.", tts=True)
 
-            # let's adjust these messages to make sure they work^^^ also need to format objects correctly.
                 await message.add_reaction('👍')
                 if objects != []:
-                    img_file = await message.reply(file=discord.File(image_bytes, filename=str(message.author))) #discord.File opens the fiel in 'rb' mode to read the bytes
+                    img_file = await message.reply(file=discord.File(image_bytes, filename=str(message.author))) 
 
-                    img_file_url = img_file.attachments[0].url #img_file is a message object
+                    img_file_url = img_file.attachments[0].url
 
-                    embed = discord.Embed( #embed tuple
-                        color=discord.Colour.fuchsia() # change this into a high contrast neon colour so client can easily see wher embed is
+                    embed = discord.Embed(
+                        color=discord.Colour.fuchsia() 
                     )
 
                     embed.set_image(url=img_file_url)
